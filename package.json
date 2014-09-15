@@ -1,0 +1,30 @@
+{
+  "name": "p-system-visualization",
+  "version": "0.0.1",
+  "description": "A d3 visualization of a p-system",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/davidlukerice/p-system-visualization.git"
+  },
+  "keywords": [
+    "p-system",
+    "molecular",
+    "computing",
+    "visualization",
+    "p",
+    "system"
+  ],
+  "author": "davidlukerice",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/davidlukerice/p-system-visualization/issues"
+  },
+  "homepage": "https://github.com/davidlukerice/p-system-visualization",
+  "dependencies": {
+    "d3": "^3.4.11"
+  }
+}
