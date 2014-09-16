@@ -25,6 +25,8 @@
   },
   "homepage": "https://github.com/davidlukerice/p-system-visualization",
   "dependencies": {
-    "d3": "^3.4.11"
+    "d3": "^3.4.11",
+    "jquery": "^2.1.1",
+    "lodash": "^2.4.1"
   }
 }
