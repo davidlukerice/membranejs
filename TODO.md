@@ -2,17 +2,19 @@ membrane.js Feature TODO List
 ======================
 
 # Current
-- [ ] rename rule parameters: reactants --> products
 - [ ] multiple membrane depth
 
 # Future
+- [ ] basic build tools (watch/lint/uglify/transpile/&c...)
 - [ ] dissolution rule
+- [ ] send in rule
 - [ ] elementary division rule
 - [ ] nonelementary division rule
 - [ ] global rule set
 - [ ] rule/membrane labels
 - [ ] rule/membrane charges
-
+- [ ] documentation / how to use
+- [ ] more demos
 - [ ] d3 run visualization
 
 # Far Future / Potentially Never

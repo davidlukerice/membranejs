@@ -5,8 +5,8 @@ test('step', function() {
     rules: [
       new Rule({
         type: Rule.Type.EVOLVE,
-        requirements:{'a':1},
-        output:{'b':1},
+        reactants:{'a':1},
+        products:{'b':1},
       })
     ]
   });
@@ -20,8 +20,8 @@ test('step', function() {
     rules: [
     new Rule({
       type: Rule.Type.EVOLVE,
-      requirements:{'b':1},
-      output:{'c':1},
+      reactants:{'b':1},
+      products:{'c':1},
     })
     ]
   });
@@ -34,13 +34,13 @@ test('step', function() {
     rules: [
     new Rule({
       type: Rule.Type.EVOLVE,
-      requirements:{'a':1},
-      output:{'b':1},
+      reactants:{'a':1},
+      products:{'b':1},
     }),
     new Rule({
       type: Rule.Type.EVOLVE,
-      requirements:{'b':2},
-      output:{'c':1},
+      reactants:{'b':2},
+      products:{'c':1},
     })
     ]
   });

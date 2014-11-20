@@ -13,7 +13,6 @@
       </div>
     </div>
     <script src="../node_modules/jquery/dist/jquery.js"></script>
-    <script src="../node_modules/d3/d3.js"></script>
     <script src="../node_modules/lodash/dist/lodash.js"></script>
     <script src="../src/membrane.js"></script>
 
@@ -23,23 +22,23 @@
         rules: [
         new Rule({
           type: Rule.Type.EVOLVE,
-          requirements:{'a':1},
-          output:{'b':1},
+          reactants:{'a':1},
+          products:{'b':1},
         }),
         new Rule({
           type: Rule.Type.EVOLVE,
-          requirements:{'b':2},
-          output:{'c':1}
+          reactants:{'b':2},
+          products:{'c':1}
         }),
         new Rule({
           type: Rule.Type.SEND_OUT,
-          requirements:{'c':1},
-          output:{'d':1}
+          reactants:{'c':1},
+          products:{'d':1}
         }),
         new Rule({
           type: Rule.Type.SEND_OUT,
-          requirements:{'a':1},
-          output:{'q':1}
+          reactants:{'a':1},
+          products:{'q':1}
         })
         ]
       });
