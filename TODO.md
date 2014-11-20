@@ -2,11 +2,10 @@ membrane.js Feature TODO List
 ======================
 
 # Current
-- [ ] multiple membrane depth
+- [ ] dissolution rule
 
 # Future
 - [ ] basic build tools (watch/lint/uglify/transpile/&c...)
-- [ ] dissolution rule
 - [ ] send in rule
 - [ ] elementary division rule
 - [ ] nonelementary division rule

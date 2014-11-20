@@ -21,11 +21,14 @@ System.prototype.simulate = function(stepLimit) {
   MJS.log('simulating');
   for (var i=0; i<stepLimit && outCome; ++i) {
     MJS.log('- step: '+(i+1));
-    MJS.log('system world before: '+this.worldToString());
+    MJS.log('system world before: '+this.toString());
     outCome = this.membrane.step(this.world);
-    MJS.log('system world after: '+this.worldToString());
+    MJS.log('system world after: '+this.toString());
   }
   MJS.log('finished');
+};
+System.prototype.toString = function() {
+  return this.membrane.toString();
 };
 System.prototype.worldToString = function () {
   return setToString(this.world);
@@ -48,18 +51,25 @@ var Membrane = function(params) {
     // set of object definitions symbol:count
     world: {},
     // children Membranes
-    childrenMembranes: [],
+    membranes: [],
     label: null,
     charge: null
   }, params);
 };
+/**
+ * Simulates a single step for the membrane and its inner membranes
+ * @param  {object} externalWorld A world object set
+ * @return {bool/object} true if a rule was applied, false otherwise, {dissolved: true} if dissolved
+ */
 Membrane.prototype.step = function(externalWorld) {
   var self = this,
       anyRulesApplied = false;
-  _.forEach(this.childrenMembranes, function(membrane) {
-    // TODO: Handle sendOut returns
-    // TODO: Handle if anything was applied
-    var result = membrane.step(this.world);
+  _.forEach(this.membranes, function(membrane) {
+    var result = membrane.step(self.world);
+    // TODO: handle {dissolve: true} if membrane is disolved
+    if (result) {
+      anyRulesApplied = true;
+    }
   });
 
   // Get all the rules that can apply
@@ -91,16 +101,15 @@ Membrane.prototype.step = function(externalWorld) {
   MJS.log('membrane after: '+this.toString());
 
   // TODO: Return {dissolve: true} if membrane is disolved
-  // TODO: Return true if had rules applied
-  // otherwise return false
   return anyRulesApplied;
 };
-Membrane.prototype.getActionsForSymbol = function(symbol) {
-  // TODO
-  return [];
-};
 Membrane.prototype.toString = function() {
-  return this.worldToString();
+  var world = this.worldToString();
+  var children = '';
+  _.forEach(this.membranes, function(membrane) {
+    children+=membrane.worldToString();
+  });
+  return '['+(world.slice(1,world.length-1))+children+']';
 };
 Membrane.prototype.worldToString = function () {
   return setToString(this.world);
