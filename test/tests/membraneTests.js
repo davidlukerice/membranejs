@@ -69,5 +69,4 @@ test('embedded membranes', function() {
   var ruleApplied = outer.step([]);
   equal(outer.worldToString(), '[ b b b b ]', 'inner membrane applies all possible output rules');
   ok(ruleApplied === true, 'rule applied');
-
 });

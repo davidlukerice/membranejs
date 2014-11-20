@@ -23,6 +23,8 @@ System.prototype.simulate = function(stepLimit) {
     MJS.log('- step: '+(i+1));
     MJS.log('system world before: '+this.toString());
     outCome = this.membrane.step(this.world);
+    if (outCome.dissolved)
+      throw 'Error: Outermost membrane dissolved';
     MJS.log('system world after: '+this.toString());
   }
   MJS.log('finished');
@@ -63,14 +65,20 @@ var Membrane = function(params) {
  */
 Membrane.prototype.step = function(externalWorld) {
   var self = this,
-      anyRulesApplied = false;
-  _.forEach(this.membranes, function(membrane) {
+      anyRulesApplied = false,
+      hasDissolved = false;
+
+  // Step inner membranes first
+  for (var i = 0; i < this.membranes.length; ++i) {
+    var membrane = this.membranes[i];
     var result = membrane.step(self.world);
-    // TODO: handle {dissolve: true} if membrane is disolved
+    if (result.dissolved) {
+      this.membranes.splice(i--, 1);
+    }
     if (result) {
       anyRulesApplied = true;
     }
-  });
+  }
 
   // Get all the rules that can apply
   var applicableRules = [];
@@ -82,7 +90,7 @@ Membrane.prototype.step = function(externalWorld) {
 
   MJS.log('membrane before: '+this.toString());
 
-  // Simulate applicable rules
+  // Apply rules in random order and skip those that no longer apply
   shuffle(applicableRules);
   var oldWorld = _.cloneDeep(this.world);
   _.forEach(applicableRules, function(rule) {
@@ -94,13 +102,19 @@ Membrane.prototype.step = function(externalWorld) {
         externalWorld[symbol]+=count;
       });
     }
-    if (result)
+    if (result) {
       anyRulesApplied = true;
+      if (rule.type === Rule.Type.DISSOLVE) {
+        hasDissolved = true;
+        return false;
+      }
+    }
   });
 
   MJS.log('membrane after: '+this.toString());
 
-  // TODO: Return {dissolve: true} if membrane is disolved
+  if (hasDissolved)
+    return {dissolved: true};
   return anyRulesApplied;
 };
 Membrane.prototype.toString = function() {
@@ -172,8 +186,11 @@ Rule.prototype.applyRule = function(oldWorld, world) {
 
     _.forEach(self.products, function(count, symbol) {
       var w = world;
-      if (self.type === Rule.Type.SEND_OUT)
+      if (self.type === Rule.Type.SEND_OUT ||
+          self.type === Rule.DISSOLVE)
+      {
         w = sendOutSet;
+      }
 
       if (w && typeof w[symbol] === 'undefined')
         w[symbol] = 0;
@@ -193,10 +210,10 @@ Rule.prototype.toString = function() {
 
 Rule.Type = {
   EVOLVE: 'evolve',
-  SEND_OUT: 'sendOut'
+  SEND_OUT: 'sendOut',
+  DISOLVE: 'disolve',
   // TODO other rule types
   //SEND_IN: 'sendIn',
-  //DISOLVE: 'disolve',
   //ELEMENTARY_DIVISION: 'elementaryDivision',
   //NONELEMENTARY_DIVIONS: 'nonelementaryDivision'
 };
