@@ -1,16 +1,17 @@
 {
-  "name": "p-system-visualization",
+  "name": "membranejs",
   "version": "0.0.1",
-  "description": "A d3 visualization of a p-system",
-  "main": "index.js",
+  "description": "A javascript library for membrane (p-system) computing and eventually visualizations for them.",
+  "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/davidlukerice/p-system-visualization.git"
+    "url": "https://github.com/davidlukerice/membranejs.git"
   },
   "keywords": [
+    "membrane",
     "p-system",
     "molecular",
     "computing",
@@ -21,9 +22,9 @@
   "author": "davidlukerice",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/davidlukerice/p-system-visualization/issues"
+    "url": "https://github.com/davidlukerice/membranejs/issues"
   },
-  "homepage": "https://github.com/davidlukerice/p-system-visualization",
+  "homepage": "https://github.com/davidlukerice/membranejs",
   "dependencies": {
     "d3": "^3.4.11",
     "jquery": "^2.1.1",
