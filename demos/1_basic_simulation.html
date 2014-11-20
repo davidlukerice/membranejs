@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Membrane.js</title>
+    <link rel="stylesheet" href="assets/index.css">
+  </head>
+  <body>
+    <div class="console">
+      <h3>Console</h3>
+      <div class="log">
+      </div>
+    </div>
+    <script src="./node_modules/jquery/dist/jquery.js"></script>
+    <script src="./node_modules/d3/d3.js"></script>
+    <script src="./node_modules/lodash/dist/lodash.js"></script>
+    <script src="./src/membrane.js"></script>
+
+    <script charset="utf-8">
+      var topMembrane = new Membrane({
+        world: {'a':3, 'b':2},
+        rules: [
+        new Rule({
+          type: Rule.Type.EVOLVE,
+          requirements:{'a':1},
+          output:{'b':1},
+        }),
+        new Rule({
+          type: Rule.Type.EVOLVE,
+          requirements:{'b':2},
+          output:{'c':1}
+        }),
+        new Rule({
+          type: Rule.Type.SEND_OUT,
+          requirements:{'c':1},
+          output:{'d':1}
+        })
+        ]
+      });
+      var system = new System({
+        membrane: topMembrane
+      });
+
+      system.simulate();
+    </script>
+  </body>
+</html>

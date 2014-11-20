@@ -25,17 +25,11 @@ System.prototype.simulate = function(stepLimit) {
     MJS.log('world: '+JSON.stringify(this.externalWorld));
   }
   MJS.log('finished');
-}
+};
 
 var Membrane = function(params) {
   _.assign(this, {
-    // Rules:
-    // TODO evolve
-    // TODO send-in
-    // TODO send-out
-    // TODO dissolve
-    // TODO elementary-division
-    // TODO nonelementary-division
+    // array of Rules
     rules: [],
     // set of object definitions symbol:count
     world: {},
@@ -157,9 +151,12 @@ Rule.prototype.applyRule = function(world, addOutput) {
 
 Rule.Type = {
   EVOLVE: 'evolve',
-  //DISOLVE: 'disolve'.
-  //SEND_IN: 'send-in',
-  //SEND_OUT: 'send-out'
+  SEND_OUT: 'sendOut'
+  // TODO other rule types
+  //SEND_IN: 'sendIn',
+  //DISOLVE: 'disolve',
+  //ELEMENTARY_DIVISION: 'elementaryDivision',
+  //NONELEMENTARY_DIVIONS: 'nonelementaryDivision'
 };
 
 //+ Jonas Raoni Soares Silva
