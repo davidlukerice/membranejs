@@ -1,4 +1,3 @@
-p-system-visualization
+membrane.js
 ======================
-
-A d3 visualization of a p-system... if it ever actually gets finished.
+A javascript library for membrane (p-system) computing and eventually visualizations for them.
