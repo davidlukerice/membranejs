@@ -3,69 +3,174 @@ function log(msg) {
   $('.log').prepend(msg+'<br>');
 }
 
-var PSystem = function(params) {
+// Placeholder global
+var MJS = {
+};
+
+var System = function(params) {
   _.assign(this, {
     membrane: null,
     externalWorld: ''
   }, params);
 };
-PSystem.prototype.simulate = function(stepLimit) {
-  var solutionFound = false;
+System.prototype.simulate = function(stepLimit) {
+  var outCome = true;
   stepLimit = stepLimit || 100;
   log('simulating');
-  for (var i=0; i<stepLimit && !solutionFound; ++i) {
+  for (var i=0; i<stepLimit && outCome; ++i) {
     log('- step: '+(i+1));
-    solutionFound = this.membrane.step(this.externalWorld);
+    outCome = this.membrane.step(this.externalWorld);
     log('world: '+JSON.stringify(this.externalWorld));
   }
   log('finished');
 }
 
-var PMembrane = function(params) {
+var Membrane = function(params) {
   _.assign(this, {
     // Rules:
-    // in
-    // out
-    // dissolve
-    // other1
-    // other2
+    // TODO evolve
+    // TODO send-in
+    // TODO send-out
+    // TODO dissolve
+    // TODO elementary-division
+    // TODO nonelementary-division
     rules: [],
-    world: '',
-    childrenMembranes: []
+    // set of object definitions symbol:count
+    world: {},
+    // children Membranes
+    childrenMembranes: [],
+    label: null,
+    charge: null
   }, params);
 };
-PMembrane.prototype.step = function(externalWorld) {
+Membrane.prototype.step = function(externalWorld) {
+  var self = this;
   _.forEach(this.childrenMembranes, function(membrane) {
     membrane.step(this.world);
   });
 
-  _.forEach(this.world, function(symbol, i, world) {
-    var possibleActions = this.getActionsForSymbol(symbol);
-    if (possibleActions.length === 0)
-      return false;
-
-    var action = possibleActions[
-      Math.floor(Math.random()*possibleActions.length)
-    ];
-    return action();
+  // Get all the rules that can apply
+  var applicableRules = [];
+  _.forEach(this.rules, function(rule) {
+    _.times(rule.numberApplications(self.world), function() {
+      applicableRules.push(rule);
+    });
   });
 
-  // TODO: Simulate current brane
+  log('membrane: '+this.toString());
 
-  // TODO: Return if a solution is found or dissolved?
-  return false;
+  // Simulate current brane
+  shuffle(applicableRules);
+  var anyRulesApplied = false;
+  _.forEach(applicableRules, function(rule) {
+    var applied = rule.applyRule(self.world);
+    if (applied)
+      anyRulesApplied = true;
+  });
+
+  // TODO: Return {symbol:count} set if anything is sent out
+  // TODO: Return {dissolve: true} if membrane is disolved
+  // TODO: Return true if had rules applied
+  // otherwise return false
+  return anyRulesApplied;
 };
-PMembrane.prototype.getActionsForSymbol = function(symbol) {
+Membrane.prototype.getActionsForSymbol = function(symbol) {
   // TODO
   return [];
 };
+Membrane.prototype.toString = function() {
+  var chars = ['['];
+  _.forEach(this.world, function(count, symbol) {
+    _.times(count, function(){
+      chars.push(symbol);
+    });
+  });
+  chars.push(']');
+  return chars.join(' ');
+};
 
+var Rule = function(params) {
+  _.assign(this, {
+    requirements: {},
+    transform: {},
+    charge: null,
+    label: null
+  }, params);
+};
+Rule.prototype.numberApplications = function(world) {
+  var self = this,
+      num = 0,
+      tempWorld = _.cloneDeep(world);
+  do {
+    var applied = this.applyRule(tempWorld, false);
+    if (applied) {
+      num+=1;
+    }
+  } while(applied);
+  return num;
+};
+/**
+ * Apply the rule to the given world. Only updates the world
+ * if it can actually apply the rule
+ * @param  {object} world {symbol:count,...}
+ * @param  {bool} Should the output of the rule be added to the rule (default: true)
+ * @return {bool} Whether the rule was applied or not
+ */
+Rule.prototype.applyRule = function(world, addOutput) {
+  var self = this,
+      applied = true;
+  if (typeof addOutput === 'undefined') {
+    addOutput = true;
+  }
+
+  // First preprocess to check if all rules can apply
+  _.forEach(self.requirements, function(count, symbol) {
+    if (world[symbol] < count) {
+      applied = false;
+      return false;
+    }
+  });
+
+  // Then apply them all if possible
+  if (applied) {
+    _.forEach(self.requirements, function(count, symbol) {
+      world[symbol]-= count;
+    });
+
+    if (addOutput) {
+      _.forEach(self.output, function(count, symbol) {
+        if (typeof world[symbol] === 'undefined')
+          world[symbol] = 0;
+        world[symbol]+=count;
+      });
+    }
+  }
+
+  return applied;
+};
+
+//+ Jonas Raoni Soares Silva
+//@ http://jsfromhell.com/array/shuffle [v1.0]
+function shuffle(o){ //v1.0
+  for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+  return o;
+}
 
 //main
-var topMembrane = new PMembrane({
-
+var topMembrane = new Membrane({
+  world: {'a':3, 'b':2},
+  rules: [
+    new Rule({
+      requirements:{'a':1},
+      output:{'b':1},
+    }),
+    new Rule({
+      requirements:{'b':2},
+      output:{'c':1}
+    })
+  ]
 });
-var system = new PSystem({
+var system = new System({
   membrane: topMembrane
 });
 
