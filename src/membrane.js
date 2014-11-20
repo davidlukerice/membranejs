@@ -2,6 +2,13 @@
 // Placeholder global
 var MJS = {};
 
+MJS.log = function(msg) {
+  if (console)
+    console.log(msg);
+  if (typeof $ !== 'undefined')
+    $('.log').prepend(msg+'<br>');
+}
+
 var System = function(params) {
   _.assign(this, {
     membrane: null,
@@ -11,13 +18,13 @@ var System = function(params) {
 System.prototype.simulate = function(stepLimit) {
   var outCome = true;
   stepLimit = stepLimit || 100;
-  log('simulating');
+  MJS.log('simulating');
   for (var i=0; i<stepLimit && outCome; ++i) {
-    log('- step: '+(i+1));
+    MJS.log('- step: '+(i+1));
     outCome = this.membrane.step(this.externalWorld);
-    log('world: '+JSON.stringify(this.externalWorld));
+    MJS.log('world: '+JSON.stringify(this.externalWorld));
   }
-  log('finished');
+  MJS.log('finished');
 }
 
 var Membrane = function(params) {
@@ -52,7 +59,7 @@ Membrane.prototype.step = function(externalWorld) {
     });
   });
 
-  log('membrane: '+this.toString());
+  MJS.log('membrane: '+this.toString());
 
   // Simulate current brane
   shuffle(applicableRules);
@@ -74,6 +81,9 @@ Membrane.prototype.getActionsForSymbol = function(symbol) {
   return [];
 };
 Membrane.prototype.toString = function() {
+  return this.worldToString();
+};
+Membrane.prototype.worldToString = function () {
   var chars = ['['];
   _.forEach(this.world, function(count, symbol) {
     _.times(count, function(){
@@ -121,7 +131,7 @@ Rule.prototype.applyRule = function(world, addOutput) {
 
   // First preprocess to check if all rules can apply
   _.forEach(self.requirements, function(count, symbol) {
-    if (world[symbol] < count) {
+    if (typeof world[symbol] === 'undefined' || world[symbol] < count) {
       applied = false;
       return false;
     }

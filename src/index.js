@@ -1,8 +1,4 @@
 
-function log(msg) {
-  $('.log').prepend(msg+'<br>');
-}
-
 var topMembrane = new Membrane({
   world: {'a':3, 'b':2},
   rules: [
