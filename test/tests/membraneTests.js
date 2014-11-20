@@ -48,3 +48,26 @@ test('step', function() {
   membrane.step([]);
   equal(membrane.worldToString(), '[ c c ]', 'handles multiple single symbol requirement');
 });
+
+test('embedded membranes', function() {
+  var inner = new Membrane({
+    world: {'a':4},
+    rules: [
+    new Rule({
+      type: Rule.Type.SEND_OUT,
+      reactants:{'a':1},
+      products:{'b':1},
+    })
+    ]
+  });
+  var outer = new Membrane({
+    world: {},
+    membranes: [inner],
+    rules: []
+  });
+  equal(outer.worldToString(), '[ ]', 'empty initial outer membrane');
+  var ruleApplied = outer.step([]);
+  equal(outer.worldToString(), '[ b b b b ]', 'inner membrane applies all possible output rules');
+  ok(ruleApplied === true, 'rule applied');
+
+});
