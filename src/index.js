@@ -91,8 +91,9 @@ Membrane.prototype.toString = function() {
 
 var Rule = function(params) {
   _.assign(this, {
+    type: Rule.Type.EVOLVE,
     requirements: {},
-    transform: {},
+    output: {},
     charge: null,
     label: null
   }, params);
@@ -149,6 +150,13 @@ Rule.prototype.applyRule = function(world, addOutput) {
   return applied;
 };
 
+Rule.Type = {
+  EVOLVE: 'evolve',
+  //DISOLVE: 'disolve'.
+  //SEND_IN: 'send-in',
+  //SEND_OUT: 'send-out'
+};
+
 //+ Jonas Raoni Soares Silva
 //@ http://jsfromhell.com/array/shuffle [v1.0]
 function shuffle(o){ //v1.0
@@ -161,10 +169,12 @@ var topMembrane = new Membrane({
   world: {'a':3, 'b':2},
   rules: [
     new Rule({
+      type: Rule.Type.EVOLVE,
       requirements:{'a':1},
       output:{'b':1},
     }),
     new Rule({
+      type: Rule.Type.EVOLVE,
       requirements:{'b':2},
       output:{'c':1}
     })
