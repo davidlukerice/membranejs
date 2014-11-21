@@ -38,34 +38,34 @@
           })
         ]
       });
-      var topMembrane = new Membrane({
+      var outerMembrane = new Membrane({
         world: {'a':3, 'b':2},
         membranes: [innerMembrane],
         rules: [
-          new Rule({
-            type: Rule.Type.EVOLVE,
-            reactants:{'a':1},
-            products:{'b':1},
-          }),
-          new Rule({
-            type: Rule.Type.EVOLVE,
-            reactants:{'b':2},
-            products:{'c':1}
-          }),
-          new Rule({
-            type: Rule.Type.SEND_OUT,
-            reactants:{'c':1},
-            products:{'d':1}
-          }),
-          new Rule({
-            type: Rule.Type.SEND_OUT,
-            reactants:{'a':1},
-            products:{'q':1}
-          })
+        new Rule({
+          type: Rule.Type.EVOLVE,
+          reactants:{'a':1},
+          products:{'b':1},
+        }),
+        new Rule({
+          type: Rule.Type.EVOLVE,
+          reactants:{'b':2},
+          products:{'c':1}
+        }),
+        new Rule({
+          type: Rule.Type.SEND_OUT,
+          reactants:{'c':1},
+          products:{'d':1}
+        }),
+        new Rule({
+          type: Rule.Type.SEND_OUT,
+          reactants:{'a':1},
+          products:{'q':1}
+        })
         ]
       });
       var system = new System({
-        membrane: topMembrane
+        membrane: outerMembrane
       });
 
       system.simulate();

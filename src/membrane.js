@@ -30,7 +30,7 @@ System.prototype.simulate = function(stepLimit) {
   MJS.log('finished');
 };
 System.prototype.toString = function() {
-  return this.membrane.toString();
+  return this.worldToString() +' '+ this.membrane.toString();
 };
 System.prototype.worldToString = function () {
   return setToString(this.world);
@@ -46,6 +46,8 @@ var Rule = function(params) {
   }, params);
 };
 
+var idCounter = 0;
+
 var Membrane = function(params) {
   _.assign(this, {
     // array of Rules
@@ -57,6 +59,7 @@ var Membrane = function(params) {
     label: null,
     charge: null
   }, params);
+  this.id = ++idCounter;
 };
 /**
  * Simulates a single step for the membrane and its inner membranes
@@ -73,6 +76,7 @@ Membrane.prototype.step = function(externalWorld) {
     var membrane = this.membranes[i];
     var result = membrane.step(self.world);
     if (result.dissolved) {
+      MJS.log('dissolving '+membrane.id);
       this.membranes.splice(i--, 1);
     }
     if (result) {
@@ -121,9 +125,9 @@ Membrane.prototype.toString = function() {
   var world = this.worldToString();
   var children = '';
   _.forEach(this.membranes, function(membrane) {
-    children+=membrane.worldToString();
+    children+=membrane.toString();
   });
-  return '['+(world.slice(1,world.length-1))+children+']';
+  return '('+this.id+')['+(world.slice(1,world.length-1))+children+']';
 };
 Membrane.prototype.worldToString = function () {
   return setToString(this.world);
@@ -187,7 +191,7 @@ Rule.prototype.applyRule = function(oldWorld, world) {
     _.forEach(self.products, function(count, symbol) {
       var w = world;
       if (self.type === Rule.Type.SEND_OUT ||
-          self.type === Rule.DISSOLVE)
+          self.type === Rule.Type.DISSOLVE)
       {
         w = sendOutSet;
       }
@@ -205,13 +209,13 @@ Rule.prototype.applyRule = function(oldWorld, world) {
   return applied;
 };
 Rule.prototype.toString = function() {
-  return "Rule("+this.type+") req"+setToString(this.reactants)+' out'+setToString(this.products);
+  return "Rule("+this.type+") react"+setToString(this.reactants)+' prod'+setToString(this.products);
 };
 
 Rule.Type = {
   EVOLVE: 'evolve',
   SEND_OUT: 'sendOut',
-  DISOLVE: 'disolve',
+  DISSOLVE: 'dissolve',
   // TODO other rule types
   //SEND_IN: 'sendIn',
   //ELEMENTARY_DIVISION: 'elementaryDivision',
