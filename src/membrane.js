@@ -1,21 +1,20 @@
 
-// Placeholder global
 var MJS = {};
 
-MJS.log = function(msg) {
+var log = function(msg) {
   if (console)
     console.log(msg);
   if (typeof $ !== 'undefined')
     $('.log').prepend(msg+'<br>');
-}
+};
 
-var System = function(params) {
+var MSystem = function(params) {
   _.assign(this, {
     membrane: null,
     world: {}
   }, params);
 };
-System.prototype.simulate = function(stepLimit) {
+MSystem.prototype.simulate = function(stepLimit) {
   var outCome = true;
   stepLimit = stepLimit || 100;
   MJS.log('simulating');
@@ -29,10 +28,10 @@ System.prototype.simulate = function(stepLimit) {
   }
   MJS.log('finished');
 };
-System.prototype.toString = function() {
+MSystem.prototype.toString = function() {
   return this.worldToString() +' '+ this.membrane.toString();
 };
-System.prototype.worldToString = function () {
+MSystem.prototype.worldToString = function () {
   return setToString(this.world);
 };
 
@@ -242,3 +241,9 @@ function setToString(set) {
   chars.push(']');
   return chars.join(' ');
 }
+
+MJS.log = log;
+MJS.MSystem = MSystem;
+MJS.Membrane = Membrane;
+MJS.Rule = Rule;
+export default MJS;

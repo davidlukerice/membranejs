@@ -33,7 +33,7 @@ module.exports = function(grunt) {
             main: {
                 type: 'amd',
                 moduleName: function(path) {
-                    return grunt.config.process('<%= pkg.moduleName %>/') + path;
+                    return grunt.config.process('MJS/') + path;
                 },
                 files: [{
                     expand: true,
@@ -51,7 +51,7 @@ module.exports = function(grunt) {
             },
             dist: {
                 src: ['tmp/transpiled/**/*.js'],
-                dest: 'dist/<%= pkg.name %>.js'
+                dest: 'dist/membrane.js'
             }
         },
 
@@ -62,7 +62,7 @@ module.exports = function(grunt) {
             },
             dist: {
                 files: {
-                    'dist/<%= pkg.name %>.min.js': ['<%= concat.dist.dest %>']
+                    'dist/membrane.min.js': ['<%= concat.dist.dest %>']
                 }
             }
         },
@@ -78,7 +78,6 @@ module.exports = function(grunt) {
                     'gruntfile.js',
                     'src/**/*.js',
                     'test/tests/*.js',
-
                     ]
                 }
             }

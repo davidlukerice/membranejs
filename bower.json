@@ -21,6 +21,7 @@
   "dependencies": {
     "d3": "3.4.13",
     "jquery": "2.1.1",
+    "loader.js": "2.1.1",
     "lodash": "2.4.1"
   }
 }

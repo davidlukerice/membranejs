@@ -1,3 +1,6 @@
+var MJS = require('MJS/membrane')['default'],
+    Rule = MJS.Rule;
+
 module("Rule Tests");
 test('numberApplications', function() {
   var rule = new Rule({
@@ -25,7 +28,7 @@ test('apply', function() {
   ok(!applied, 'not applied');
 
   world = {a:1, c:5};
-  oldWorld = _.cloneDeep(world);
+  var oldWorld = _.cloneDeep(world);
   applied = rule.applyRule(oldWorld, world);
   ok(applied, 'applied');
   equal(world.a, 0, 'removed requirement symbol');

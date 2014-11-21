@@ -1,3 +1,7 @@
+var MJS = require('MJS/membrane')['default'],
+    Rule = MJS.Rule,
+    Membrane = MJS.Membrane;
+
 module("Membrane Tests");
 test('step', function() {
   var membrane = new Membrane({
@@ -15,7 +19,7 @@ test('step', function() {
   equal(membrane.worldToString(), '[ b b b b ]', 'applies all possible rules');
   ok(ruleApplied === true, 'rule applied');
 
-  var membrane = new Membrane({
+  membrane = new Membrane({
     world: {'a':4},
     rules: [
     new Rule({
