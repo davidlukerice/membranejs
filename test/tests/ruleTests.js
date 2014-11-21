@@ -62,4 +62,16 @@ test('apply', function() {
   ok(applied, 'applied');
   ok(oldWorld.a === 0 && oldWorld.b === undefined && oldWorld.c === undefined, 'does\'t apply multiple products to old world');
   ok(world.a === 0 && world.b === 1 && world.c === 1, 'applies multiple products to world');
+
+  rule = new Rule({
+    type: Rule.Type.DISSOLVE,
+    reactants:{'a':1},
+    products:{'b':1},
+  });
+  world = {a:1};
+  oldWorld = _.cloneDeep(world);
+  var result = rule.applyRule(oldWorld, world);
+  ok(result.b === 1, 'applied dissolve rule returns product');
+  ok(oldWorld.a === 0 && oldWorld.b === undefined, 'dissolve does\'t apply products to old world');
+  ok(world.a === 0 && world.b === undefined, 'dissolve doesn\'t apply dissolve products to world');
 });

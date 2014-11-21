@@ -2,10 +2,9 @@ membrane.js Feature TODO List
 ======================
 
 # Current
-- [ ] dissolution rule
+- [ ] get packages from bower
 
 # Future
-- [ ] get packages from bower
 - [ ] register as bower plugin
 - [ ] basic build tools (watch/lint/uglify/transpile/&c...)
 - [ ] send in rule

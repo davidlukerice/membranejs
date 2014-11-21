@@ -69,4 +69,22 @@ test('embedded membranes', function() {
   var ruleApplied = outer.step([]);
   equal(outer.worldToString(), '[ b b b b ]', 'inner membrane applies all possible output rules');
   ok(ruleApplied === true, 'rule applied');
+
+  inner = new Membrane({
+    world: {'a':1},
+    rules: [
+    new Rule({
+      type: Rule.Type.DISSOLVE,
+      reactants:{'a':1},
+      products:{'b':1},
+    })
+    ]
+  });
+  outer = new Membrane({
+    membranes: [inner]
+  });
+  equal(outer.membranes.length, 1, 'has membrane before dissolve');
+  var result = outer.step([]);
+  equal(outer.membranes.length, 0, 'doesn\'t have membrane after dissolve');
+  ok(outer.world.a === undefined && outer.world.b === 1, 'correct products from inner dissolved membrane');
 });
