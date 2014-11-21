@@ -2,10 +2,9 @@ membrane.js Feature TODO List
 ======================
 
 # Current
-- [ ] register as bower plugin
+- [ ] basic build tools (watch/lint/uglify/transpile/&c...)
 
 # Future
-- [ ] basic build tools (watch/lint/uglify/transpile/&c...)
 - [ ] send in rule
 - [ ] elementary division rule
 - [ ] nonelementary division rule
