@@ -1,0 +1,26 @@
+{
+  "name": "membranejs",
+  "version": "0.0.1",
+  "homepage": "https://github.com/davidlukerice/membranejs",
+  "authors": [
+    "David Rice <davidlukerice@gmail.com>"
+  ],
+  "description": "Library for membrane (p-system) computing",
+  "main": "./dist/membrane.min.js",
+  "keywords": [
+    "membrane",
+    "computing",
+    "p-system",
+    "psystem"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "node_modules",
+    "bower_components"
+  ],
+  "dependencies": {
+    "d3": "3.4.13",
+    "jquery": "2.1.1",
+    "lodash": "2.4.1"
+  }
+}
