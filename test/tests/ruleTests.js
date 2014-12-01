@@ -1,5 +1,5 @@
-var MJS = require('MJS/membrane')['default'],
-    Rule = MJS.Rule;
+var MJS = require('MJS/mjs')['default'],
+    Rule = require('MJS/rule')['default'];
 
 module("Rule Tests");
 test('numberApplications', function() {

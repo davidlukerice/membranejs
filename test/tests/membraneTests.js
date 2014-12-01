@@ -1,6 +1,6 @@
-var MJS = require('MJS/membrane')['default'],
-    Rule = MJS.Rule,
-    Membrane = MJS.Membrane;
+var MJS = require('MJS/mjs')['default'],
+    Rule = require('MJS/rule')['default'],
+    Membrane = require('MJS/membrane')['default'];
 
 module("Membrane Tests");
 test('step', function() {

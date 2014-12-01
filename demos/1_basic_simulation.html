@@ -18,10 +18,10 @@
     <script src='../dist/membrane.js'></script>
 
     <script charset="utf-8">
-      var MJS = require('MJS/membrane')['default'],
-          MSystem = MJS.MSystem,
-          Rule = MJS.Rule,
-          Membrane = MJS.Membrane;
+      var MJS = require('MJS/mjs')['default'],
+          MSystem = require('MJS/mSystem')['default'],
+          Rule = require('MJS/rule')['default'],
+          Membrane = require('MJS/membrane')['default'];
 
       var topMembrane = new Membrane({
         world: {'a':3, 'b':2},

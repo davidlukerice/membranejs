@@ -2,7 +2,6 @@ membrane.js Feature TODO List
 ======================
 
 # Current
-- [ ] basic build tools (watch/lint/uglify/transpile/&c...)
 
 # Future
 - [ ] send in rule
