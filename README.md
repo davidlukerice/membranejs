@@ -3,6 +3,13 @@ membrane.js
 A javascript library for membrane (p-system) computing and eventually visualizations for them.
 
 # Features
-Rules
+Currently Supported Rules
 - Evolution
 - Send Out
+- Dissolve
+
+# Releases
+To build a release
+- `grunt bump-only:patch`, `grunt bump-only:minor`, or `grunt bump-only:major`
+- `grunt test`
+- `grunt bump-commit`
