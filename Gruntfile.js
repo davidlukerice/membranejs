@@ -19,12 +19,18 @@ module.exports = function(grunt) {
         clean: ['tmp'],
 
         copy: {
-            main: {
+            scripts: {
                 files: [{
                     expand: true,
                     cwd:'src',
                     src: ['**/*.js'],
                     dest: 'tmp/javascript/'
+                }]
+            },
+            styles: {
+                files: [{
+                    src: 'assets/membrane.css',
+                    dest: 'dist/membrane.css'
                 }]
             }
         },
@@ -133,7 +139,7 @@ module.exports = function(grunt) {
 
     // tasks
     grunt.registerTask('build',
-    ['clean', 'copy', 'transpile', 'concat', 'uglify']);
+    ['clean', 'copy:scripts', 'copy:styles', 'transpile', 'concat', 'uglify']);
     grunt.registerTask('test', ['jshint', 'build', 'qunit', 'sloc']);
     grunt.registerTask('watchBuild', ['test', 'concurrent:watches']);
     grunt.registerTask('default', ['watchBuild']);
