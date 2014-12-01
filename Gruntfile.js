@@ -143,4 +143,6 @@ module.exports = function(grunt) {
     grunt.registerTask('test', ['jshint', 'build', 'qunit', 'sloc']);
     grunt.registerTask('watchBuild', ['test', 'concurrent:watches']);
     grunt.registerTask('default', ['watchBuild']);
+
+    grunt.registerTask('tag', ['bump-only', 'test', 'bump-commit']);
 };
