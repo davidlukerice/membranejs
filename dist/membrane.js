@@ -1,17 +1,9 @@
-/* membranejs 0.0.1 2014-11-20 */
-define("MJS/membrane", 
-  ["exports"],
-  function(__exports__) {
+/* membranejs 0.0.1 2014-11-30 */
+define("MJS/mSystem", 
+  ["MJS/mjs","exports"],
+  function(__dependency1__, __exports__) {
     "use strict";
-
-    var MJS = {};
-
-    var log = function(msg) {
-      if (console)
-        console.log(msg);
-      if (typeof $ !== 'undefined')
-        $('.log').prepend(msg+'<br>');
-    };
+    var MJS = __dependency1__["default"];
 
     var MSystem = function(params) {
       _.assign(this, {
@@ -37,18 +29,18 @@ define("MJS/membrane",
       return this.worldToString() +' '+ this.membrane.toString();
     };
     MSystem.prototype.worldToString = function () {
-      return setToString(this.world);
+      return MJS.setToString(this.world);
     };
 
-    var Rule = function(params) {
-      _.assign(this, {
-        type: Rule.Type.EVOLVE,
-        reactants: {},
-        products: {},
-        charge: null,
-        label: null
-      }, params);
-    };
+    MJS.MSystem = MSystem;
+    __exports__["default"] = MSystem;
+  });
+define("MJS/membrane", 
+  ["MJS/mjs","MJS/rule","exports"],
+  function(__dependency1__, __dependency2__, __exports__) {
+    "use strict";
+    var MJS = __dependency1__["default"];
+    var Rule = __dependency2__["default"];
 
     var idCounter = 0;
 
@@ -134,8 +126,57 @@ define("MJS/membrane",
       return '('+this.id+')['+(world.slice(1,world.length-1))+children+']';
     };
     Membrane.prototype.worldToString = function () {
-      return setToString(this.world);
+      return MJS.setToString(this.world);
     };
+
+    //+ Jonas Raoni Soares Silva
+    //@ http://jsfromhell.com/array/shuffle [v1.0]
+    function shuffle(o){ //v1.0
+      for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+      return o;
+    }
+
+    MJS.Membrane = Membrane;
+    __exports__["default"] = Membrane;
+  });
+define("MJS/mjs", 
+  ["exports"],
+  function(__exports__) {
+    "use strict";
+
+    /**
+     * membrane.js global object
+     */
+    var MJS = {};
+
+    MJS.log = function(msg) {
+      if (console)
+        console.log(msg);
+      if (typeof $ !== 'undefined')
+        $('.log').prepend(msg+'<br>');
+    };
+
+    /**
+     * @param {[type]} set {symbol:count,...}
+     */
+    MJS.setToString = function(set) {
+      var chars = ['['];
+      _.forEach(set, function(count, symbol) {
+        _.times(count, function(){
+          chars.push(symbol);
+        });
+      });
+      chars.push(']');
+      return chars.join(' ');
+    };
+
+    __exports__["default"] = MJS;
+  });
+define("MJS/rule", 
+  ["MJS/mjs","exports"],
+  function(__dependency1__, __exports__) {
+    "use strict";
+    var MJS = __dependency1__["default"];
 
     var Rule = function(params) {
       _.assign(this, {
@@ -213,7 +254,7 @@ define("MJS/membrane",
       return applied;
     };
     Rule.prototype.toString = function() {
-      return "Rule("+this.type+") react"+setToString(this.reactants)+' prod'+setToString(this.products);
+      return "Rule("+this.type+") react"+MJS.setToString(this.reactants)+' prod'+MJS.setToString(this.products);
     };
 
     Rule.Type = {
@@ -226,31 +267,7 @@ define("MJS/membrane",
       //NONELEMENTARY_DIVIONS: 'nonelementaryDivision'
     };
 
-    //+ Jonas Raoni Soares Silva
-    //@ http://jsfromhell.com/array/shuffle [v1.0]
-    function shuffle(o){ //v1.0
-      for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
-      return o;
-    }
-
-    /**
-     * @param {[type]} set {symbol:count,...}
-     */
-    function setToString(set) {
-      var chars = ['['];
-      _.forEach(set, function(count, symbol) {
-        _.times(count, function(){
-          chars.push(symbol);
-        });
-      });
-      chars.push(']');
-      return chars.join(' ');
-    }
-
-    MJS.log = log;
-    MJS.MSystem = MSystem;
-    MJS.Membrane = Membrane;
     MJS.Rule = Rule;
-    __exports__["default"] = MJS;
+    __exports__["default"] = Rule;
   });
 //# sourceMappingURL=membrane.js.map
