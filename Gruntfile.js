@@ -100,10 +100,26 @@ module.exports = function(grunt) {
             watches: {
                 tasks: ["watch:lint", "watch:build"]
             }
-        }
+        },
+
+        bump: {
+          options: {
+            files: ['package.json', 'bower.json'],
+            updateConfigs: [],
+            commit: true,
+            commitMessage: 'Release v%VERSION%',
+            commitFiles: ['package.json', 'bower.json', 'dist/*'],
+            createTag: false,
+            tagName: 'v%VERSION%',
+            tagMessage: 'Version %VERSION%',
+            push: false,
+            gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d'
+          }
+        },
     });
 
     // Load the plugins
+    grunt.loadNpmTasks('grunt-bump');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-qunit');
