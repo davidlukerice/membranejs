@@ -90,4 +90,19 @@ test('apply', function() {
   ok(result.b === 1, 'applied dissolve rule returns product');
   ok(oldWorld.a === 0 && oldWorld.b === undefined, 'dissolve does\'t apply products to old world');
   ok(world.a === 0 && world.b === undefined, 'dissolve doesn\'t apply dissolve products to world');
+
+  rule = new Rule({
+    type: Rule.Type.SEND_IN,
+    reactants:{'a':2},
+    products:{'b':1},
+  });
+  world = {a:2};
+  oldWorld = _.cloneDeep(world);
+  var childMembranes = [{world:{}}];
+  result = rule.applyRule(oldWorld, world, []);
+  ok(result === false, 'send in rule not applied with no children');
+  result = rule.applyRule(oldWorld, world, childMembranes);
+  ok(world.a === 0 && world.b === undefined, 'world no longer has send in reactants');
+  ok(childMembranes[0].world.a === undefined && childMembranes[0].world.b === 1, 'products sent into world');
+  ok(result === true, 'nothing sent out in result');
 });

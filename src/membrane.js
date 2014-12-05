@@ -58,7 +58,7 @@ Membrane.prototype.step = function(externalWorld) {
   // Get all the rules that can apply
   var applicableRules = [];
   _.forEach(this.rules, function(rule) {
-    _.times(rule.numberApplications(self.world), function() {
+    _.times(rule.numberApplications(self.world, self.membranes), function() {
       applicableRules.push(rule);
     });
   });
@@ -69,7 +69,7 @@ Membrane.prototype.step = function(externalWorld) {
   shuffle(applicableRules);
   var oldWorld = _.cloneDeep(this.world);
   _.forEach(applicableRules, function(rule) {
-    var result = rule.applyRule(oldWorld, self.world);
+    var result = rule.applyRule(oldWorld, self.world, self.membranes);
     if (_.isObject(result)) {
       _.forEach(result, function(count, symbol) {
         if (typeof externalWorld[symbol] === 'undefined')

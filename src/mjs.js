@@ -25,4 +25,12 @@ MJS.setToString = function(set) {
   return chars.join(' ');
 };
 
+MJS.selectRandomIn = function(xs) {
+  return xs[Math.floor(Math.random()*xs.length)];
+};
+
+MJS.cloneObjectArray = function(xs) {
+  return _.map(xs, function(x) {return x.clone;});
+};
+
 export default MJS;

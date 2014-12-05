@@ -2,7 +2,6 @@ membrane.js Feature TODO List
 ======================
 
 # Current
-- [ ] send in rule
 
 # Future
 - [ ] elementary division rule
