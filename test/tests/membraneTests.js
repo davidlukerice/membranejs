@@ -3,6 +3,24 @@ var MJS = require('MJS/mjs')['default'],
     Membrane = require('MJS/membrane')['default'];
 
 module("Membrane Tests");
+test('clone', function() {
+  var membrane = new Membrane({
+    world: {'a':4},
+    rules: [
+      new Rule({
+        type: Rule.Type.EVOLVE,
+        reactants:{'a':1},
+        products:{'b':1},
+      })
+    ]
+  });
+  var clonedMembrane = membrane.clone();
+  equal(membrane.id, clonedMembrane.id, 'cloned membrane ids are the same');
+  notEqual(membrane, clonedMembrane, 'but membranes aren\'t the same');
+  equal(membrane.world.b, clonedMembrane.world.b, 'same world amounts');
+  notEqual(membrane.world, clonedMembrane.world, 'but different worlds');
+});
+
 test('step', function() {
   var membrane = new Membrane({
     world: {'a':4},

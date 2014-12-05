@@ -2,6 +2,19 @@ var MJS = require('MJS/mjs')['default'],
     Rule = require('MJS/rule')['default'];
 
 module("Rule Tests");
+test('clone', function() {
+  var rule = new Rule({
+    type: Rule.Type.EVOLVE,
+    reactants:{'a':1},
+    products:{'b':1},
+  });
+  var clonedRule = rule.clone();
+  equal(rule.type, clonedRule.type, 'cloned rule types are the same');
+  notEqual(rule, clonedRule, 'but rules aren\'t the same');
+  equal(rule.products.b, clonedRule.products.b, 'same products amounts');
+  notEqual(rule.products, clonedRule.products, 'but different product objects');
+});
+
 test('numberApplications', function() {
   var rule = new Rule({
     type: Rule.Type.EVOLVE,

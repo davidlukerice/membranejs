@@ -10,6 +10,19 @@ var Rule = function(params) {
     charge: null,
     label: null
   }, params);
+
+  if (typeof this.type === 'undefined')
+    throw 'Unsupported Rule Type('+this.type+')';
+};
+
+Rule.prototype.clone = function() {
+  return new Rule({
+    type: this.type,
+    reactants: _.cloneDeep(this.reactants),
+    products: _.cloneDeep(this.products),
+    charge: this.charge,
+    label: this.label
+  });
 };
 Rule.prototype.numberApplications = function(world) {
   var self = this,

@@ -6,6 +6,14 @@ var MSystem = function(params) {
     world: {}
   }, params);
 };
+
+MSystem.prototype.clone = function() {
+  return new MSystem({
+    membrane: this.membrane.clone(),
+    world: _.cloneDeep(this.world)
+  });
+};
+
 MSystem.prototype.simulate = function(stepLimit) {
   var outCome = true;
   stepLimit = stepLimit || 100;
@@ -18,6 +26,8 @@ MSystem.prototype.simulate = function(stepLimit) {
       throw 'Error: Outermost membrane dissolved';
     MJS.log('system world after: '+this.toString());
   }
+  if (i === stepLimit)
+    MJS.log('step limit('+stepLimit+') reached');
   MJS.log('finished');
 };
 MSystem.prototype.toString = function() {

@@ -14,8 +14,24 @@ var Membrane = function(params) {
     label: null,
     charge: null
   }, params);
-  this.id = ++idCounter;
+
+  if (typeof this.id === 'undefined')
+    this.id = ++idCounter;
 };
+
+Membrane.prototype.clone = function() {
+  var rules = _.map(this.rules, function(rule) { return rule.clone; }),
+      membranes = _.map(this.membranes, function(membrane) { return membrane.clone(); });
+  return new Membrane({
+    id: this.id,
+    rules: rules,
+    world: _.cloneDeep(this.world),
+    membranes: membranes,
+    label: this.label,
+    charge: this.charge
+  });
+};
+
 /**
  * Simulates a single step for the membrane and its inner membranes
  * @param  {object} externalWorld A world object set
