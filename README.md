@@ -6,6 +6,7 @@ A javascript library for membrane (p-system) computing and eventually visualizat
 Currently Supported Rules
 - Evolution
 - Send Out
+- Send In
 - Dissolve
 
 # Releases
