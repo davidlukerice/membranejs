@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Membrane.js - Demo 3: Advanced Rules</title>
+    <link rel="stylesheet" href="../assets/membrane.css">
+  </head>
+  <body>
+    <h1>Membrane.js - Demo 3: Advanced Rules</h1>
+    <div class="console">
+      <h3>Console</h3>
+      <div class="log">
+      </div>
+    </div>
+    <script src="../bower_components/jquery/dist/jquery.js"></script>
+    <script src="../bower_components/lodash/dist/lodash.js"></script>
+    <script src="../bower_components/loader.js/loader.js"></script>
+    <script src='../dist/membrane.js'></script>
+
+    <script charset="utf-8">
+      var MJS = require('MJS/mjs')['default'],
+          MSystem = require('MJS/mSystem')['default'],
+          Rule = require('MJS/rule')['default'],
+          Membrane = require('MJS/membrane')['default'];
+
+      var innerMembrane = new Membrane({
+        rules: [
+          new Rule({
+            type: Rule.Type.SEND_OUT,
+            reactants:{'b':1},
+            products:{'a':1}
+          })
+        ]
+      });
+      var outerMembrane = new Membrane({
+        world: {'a': 3},
+        membranes: [innerMembrane, new Membrane()],
+        rules: [
+          new Rule({
+            type: Rule.Type.SEND_IN,
+            reactants:{'a':2},
+            products:{'b':1}
+          })
+        ]
+      });
+      var system = new MSystem({
+        membrane: outerMembrane
+      });
+
+      system.simulate();
+    </script>
+  </body>
+</html>

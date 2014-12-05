@@ -2,13 +2,13 @@ membrane.js Feature TODO List
 ======================
 
 # Current
+- [ ] d3 run visualization
 
 # Future
 - [ ] elementary division rule
 - [ ] global rule set
 - [ ] rule/membrane labels
 - [ ] rule/membrane charges
-- [ ] d3 run visualization
 - [ ] more demos
 - [ ] documentation / how to use
 
