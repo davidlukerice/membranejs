@@ -1,4 +1,4 @@
-/* membranejs 0.0.1 2014-11-30 */
+/* membranejs 0.0.3 2014-12-05 */
 define("MJS/mSystem", 
   ["MJS/mjs","exports"],
   function(__dependency1__, __exports__) {
@@ -11,6 +11,14 @@ define("MJS/mSystem",
         world: {}
       }, params);
     };
+
+    MSystem.prototype.clone = function() {
+      return new MSystem({
+        membrane: this.membrane.clone(),
+        world: _.cloneDeep(this.world)
+      });
+    };
+
     MSystem.prototype.simulate = function(stepLimit) {
       var outCome = true;
       stepLimit = stepLimit || 100;
@@ -23,6 +31,8 @@ define("MJS/mSystem",
           throw 'Error: Outermost membrane dissolved';
         MJS.log('system world after: '+this.toString());
       }
+      if (i === stepLimit)
+        MJS.log('step limit('+stepLimit+') reached');
       MJS.log('finished');
     };
     MSystem.prototype.toString = function() {
@@ -55,8 +65,24 @@ define("MJS/membrane",
         label: null,
         charge: null
       }, params);
-      this.id = ++idCounter;
+
+      if (typeof this.id === 'undefined')
+        this.id = ++idCounter;
     };
+
+    Membrane.prototype.clone = function() {
+      var rules = _.map(this.rules, function(rule) { return rule.clone; }),
+          membranes = _.map(this.membranes, function(membrane) { return membrane.clone(); });
+      return new Membrane({
+        id: this.id,
+        rules: rules,
+        world: _.cloneDeep(this.world),
+        membranes: membranes,
+        label: this.label,
+        charge: this.charge
+      });
+    };
+
     /**
      * Simulates a single step for the membrane and its inner membranes
      * @param  {object} externalWorld A world object set
@@ -83,7 +109,7 @@ define("MJS/membrane",
       // Get all the rules that can apply
       var applicableRules = [];
       _.forEach(this.rules, function(rule) {
-        _.times(rule.numberApplications(self.world), function() {
+        _.times(rule.numberApplications(self.world, self.membranes), function() {
           applicableRules.push(rule);
         });
       });
@@ -94,7 +120,7 @@ define("MJS/membrane",
       shuffle(applicableRules);
       var oldWorld = _.cloneDeep(this.world);
       _.forEach(applicableRules, function(rule) {
-        var result = rule.applyRule(oldWorld, self.world);
+        var result = rule.applyRule(oldWorld, self.world, self.membranes);
         if (_.isObject(result)) {
           _.forEach(result, function(count, symbol) {
             if (typeof externalWorld[symbol] === 'undefined')
@@ -170,6 +196,14 @@ define("MJS/mjs",
       return chars.join(' ');
     };
 
+    MJS.selectRandomIn = function(xs) {
+      return xs[Math.floor(Math.random()*xs.length)];
+    };
+
+    MJS.cloneObjectArray = function(xs) {
+      return _.map(xs, function(x) {return x.clone;});
+    };
+
     __exports__["default"] = MJS;
   });
 define("MJS/rule", 
@@ -188,14 +222,34 @@ define("MJS/rule",
         charge: null,
         label: null
       }, params);
+
+      if (typeof this.type === 'undefined')
+        throw 'Unsupported Rule Type('+this.type+')';
     };
-    Rule.prototype.numberApplications = function(world) {
+
+    Rule.prototype.clone = function() {
+      return new Rule({
+        type: this.type,
+        reactants: _.cloneDeep(this.reactants),
+        products: _.cloneDeep(this.products),
+        charge: this.charge,
+        label: this.label
+      });
+    };
+
+    /**
+     * Gets how many times a rule can be applied on the given world and membrane children
+     * @param {Object} world             Multiset of world objects
+     * @param {Array} childrenMembranes  List of the current membrane's children
+     * @return Number of times this rule can be applied
+     */
+    Rule.prototype.numberApplications = function(world, childrenMembranes) {
       var self = this,
           num = 0,
           tempWorld = _.cloneDeep(world),
           applied;
       do {
-        applied = this.applyRule(tempWorld);
+        applied = this.applyRule(tempWorld, MJS.cloneObjectArray(childrenMembranes));
         if (applied) {
           num+=1;
         }
@@ -207,14 +261,20 @@ define("MJS/rule",
      * if it can actually apply the rule
      * @param  {object} oldWorld {symbol:count,...} world to decrement but not add to
      * @param  {object} world {symbol:count,...} (optional) world to both decrement and add to
+     * @param {Array} childrenMembranes  (optional) List of the current membrane's children
      * @return {bool/object} Whether the rule was applied or not, or world set object if sending out
      */
-    Rule.prototype.applyRule = function(oldWorld, world) {
+    Rule.prototype.applyRule = function(oldWorld, world, childrenMembranes) {
       var self = this,
           applied = true,
           sendOutSet = {};
 
-      // First preprocess to check if all rules can apply
+      if (_.isArray(world)) {
+        childrenMembranes = world;
+        world = null;
+      }
+
+      // First preprocess to check if all reactants exist and the rule can be applied
       _.forEach(self.reactants, function(count, symbol) {
         if (typeof oldWorld[symbol] === 'undefined' || oldWorld[symbol] < count) {
           applied = false;
@@ -222,7 +282,12 @@ define("MJS/rule",
         }
       });
 
-      // Then apply them all if possible
+      // Send in rules require some children membrane to send in to
+      if (this.type === Rule.Type.SEND_IN && (!childrenMembranes || childrenMembranes.length===0)) {
+        applied = false;
+      }
+
+      // Then apply if possible
       if (applied) {
         _.forEach(self.reactants, function(count, symbol) {
           oldWorld[symbol]-= count;
@@ -239,6 +304,9 @@ define("MJS/rule",
               self.type === Rule.Type.DISSOLVE)
           {
             w = sendOutSet;
+          }
+          else if (self.type === Rule.Type.SEND_IN) {
+            w = MJS.selectRandomIn(childrenMembranes).world;
           }
 
           if (w && typeof w[symbol] === 'undefined')
@@ -261,8 +329,8 @@ define("MJS/rule",
       EVOLVE: 'evolve',
       SEND_OUT: 'sendOut',
       DISSOLVE: 'dissolve',
+      SEND_IN: 'sendIn'
       // TODO other rule types
-      //SEND_IN: 'sendIn',
       //ELEMENTARY_DIVISION: 'elementaryDivision',
       //NONELEMENTARY_DIVIONS: 'nonelementaryDivision'
     };
