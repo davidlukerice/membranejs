@@ -105,4 +105,10 @@ test('apply', function() {
   ok(world.a === 0 && world.b === undefined, 'world no longer has send in reactants');
   ok(childMembranes[0].world.a === undefined && childMembranes[0].world.b === 1, 'products sent into world');
   ok(result === true, 'nothing sent out in result');
+
+  world = {a:2};
+  oldWorld = _.cloneDeep(world);
+  childMembranes = [{world:{b:0}}, {world:{b:0}}];
+  result = rule.applyRule(oldWorld, world, childMembranes);
+  equal(childMembranes[0].world.b + childMembranes[1].world.b, 1, 'send in rule only sends to single child');
 });
